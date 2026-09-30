@@ -25,16 +25,67 @@ model User {
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
 
+    orders Order[]
+}
+
+
+model Category {
+    id Int @id @default(autoincrement())
+    name String @unique
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    products Product[]
 }
 
 model Product {
     id          Int     @id @default(autoincrement())
     name        String
     description String
-    price       Decimal
+    price       Decimal @db.Decimal(10, 2)
+    stock Int @default(0)
+
+    categoryId Int
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    category Category @relation(fields: [categoryId], references: [id])
+
+    orderItens OrderItem[]
 }
+
 
 model Order {
     id Int @id @default(autoincrement())
 
+    userId Int
+
+    status OrderStatus @default(PENDING)
+
+    totalAmount Decimal @db.Decimal(10, 2)
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    user User @relation(fields: [userId], references: [id])
+
+    items OrderItem[]
+}
+
+model OrderItem {
+    id Int @id @default(autoincrement()) 
+
+    orderId Int
+    productId Int
+
+    quantity Int
+
+    price Decimal @db.Decimal(10, 2)
+
+    order Order @relation(fields: [orderId], references: [id])
+    product Product @relation(fields: [productId], references: [id])
+
+    @@unique([orderId, productId])
 }
