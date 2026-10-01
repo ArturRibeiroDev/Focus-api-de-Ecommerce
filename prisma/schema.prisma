@@ -1,97 +1,105 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+    provider = "prisma-client"
+    output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
 }
 
 enum OrderStatus {
-  PENDING
-  PAID
-  CANCELLED
+    PENDING
+    PAID
+    CANCELLED
+}
+
+enum UserRoles {
+    ADMIN
+    USER
+    SALE
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+    id        String   @id @default(uuid())
+    name      String
+    email     String   @unique
+    password  String
 
-  cart   Cart?
-  orders Order[]
+    userRole UserRoles @default(USER)
 
-  @@map("users")
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    cart   Cart?
+    orders Order[]
+
+    @@map("users")
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String
-  price       Decimal  @db.Decimal(10, 2)
-  stock       Int
-  category    String
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+    id          String   @id @default(uuid())
+    name        String
+    description String
+    price       Decimal  @db.Decimal(10, 2)
+    stock       Int
+    category    String
+    createdAt   DateTime @default(now()) @map("created_at")
+    updatedAt   DateTime @updatedAt @map("updated_at")
 
-  cartItems   CartItem[]
-  orderItems  OrderItem[]
+    cartItems  CartItem[]
+    orderItems OrderItem[]
 
-  @@map("products")
+    @@map("products")
 }
 
 model Cart {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique @map("user_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+    id        String   @id @default(uuid())
+    userId    String   @unique @map("user_id")
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
 
-  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  items CartItem[]
+    user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    items CartItem[]
 
-  @@map("carts")
+    @@map("carts")
 }
 
 model CartItem {
-  id        Int @id @default(autoincrement())
-  cartId    Int @map("cart_id")
-  productId Int @map("product_id")
-  quantity  Int
-  unitPrice Decimal @db.Decimal(10, 2) @map("unit_price")
+    id        String  @id @default(uuid())
+    cartId    String  @map("cart_id")
+    productId String  @map("product_id")
+    quantity  Int
+    unitPrice Decimal @map("unit_price") @db.Decimal(10, 2)
 
-  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+    cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+    product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  @@unique([cartId, productId])
-  @@map("cart_items")
+    @@unique([cartId, productId])
+    @@map("cart_items")
 }
 
 model Order {
-  id          Int         @id @default(autoincrement())
-  userId      Int         @map("user_id")
-  totalAmount Decimal     @db.Decimal(10, 2) @map("total_amount")
-  status      OrderStatus @default(PENDING)
-  createdAt   DateTime    @default(now()) @map("created_at")
+    id          String      @id @default(uuid())
+    userId      String      @map("user_id")
+    totalAmount Decimal     @map("total_amount") @db.Decimal(10, 2)
+    status      OrderStatus @default(PENDING)
+    createdAt   DateTime    @default(now()) @map("created_at")
 
-  user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  items OrderItem[]
+    user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    items OrderItem[]
 
-  @@map("orders")
+    @@map("orders")
 }
 
 model OrderItem {
-  id        Int     @id @default(autoincrement())
-  orderId   Int     @map("order_id")
-  productId Int     @map("product_id")
-  quantity  Int
-  price     Decimal @db.Decimal(10, 2)
+    id        String  @id @default(uuid())
+    orderId   String  @map("order_id")
+    productId String  @map("product_id")
+    quantity  Int
+    price     Decimal @db.Decimal(10, 2)
 
-  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+    order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+    product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  @@map("order_items")
+    @@map("order_items")
 }

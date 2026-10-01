@@ -6,5 +6,5 @@ import { validate } from "../../Middlewares/validate-middleware.js";
 
 export const authRoutes = Router()
 
-authRoutes.post("/register", validate(registerSchema),authController.register)
+authRoutes.post("/register", validate(registerSchema), authController.register)
 authRoutes.get("/user", authController.find)
