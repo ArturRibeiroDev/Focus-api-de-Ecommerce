@@ -2,14 +2,14 @@ import { Request, Response } from "express";
 import { userService } from "./user-service.js";
 import { AppError } from "../../errors/AppError.js";
 
-const userController = {
+export const userController = {
     async me(req: Request, res: Response) {
 
         const user = await userService.getUser({
             id: req.user.id,
         });
 
-        return res.status(200).json({
+        return res.json({
             user,
         });
     },
@@ -31,4 +31,4 @@ const userController = {
     },
 };
 
-export { userController };
+

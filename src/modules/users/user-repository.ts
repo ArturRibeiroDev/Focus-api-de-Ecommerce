@@ -24,14 +24,14 @@ const userRepository = {
             },
         });
     },
-    
+
     async findbyId(id: string) {
         return prisma.user.findUnique({
             where: {
                 id,
-            }
-        })
-    }
+            },
+        });
+    },
 };
 
 export { userRepository };

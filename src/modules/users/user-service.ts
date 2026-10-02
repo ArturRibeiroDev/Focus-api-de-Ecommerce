@@ -10,11 +10,15 @@ const userService = {
         const user = await userRepository.findbyId(id);
 
         if (!user) {
-            throw new AppError("Usuário não encontrado", 400);
+            throw new AppError("Usuário não encontrado", 404);
         }
 
         return {
-            user,
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            // role: user.role,
+            createdAt: user.createdAt,
         };
     },
 };
