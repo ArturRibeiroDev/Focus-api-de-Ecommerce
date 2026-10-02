@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express"
 import { AppError } from "../errors/AppError.js"
 
-export function AllowMiddleware(
+export function roleMiddleware(
      ...permitedRoles: string[]
 ) {
     return (
