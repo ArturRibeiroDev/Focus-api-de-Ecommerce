@@ -10,22 +10,28 @@ datasource db {
 enum OrderStatus {
     PENDING
     PAID
-    PROCESSING
-    SHIPPED
-    DELIVERED
     CANCELLED
 }
 
+enum UserRoles {
+    ADMIN
+    USER
+    SALE
+}
+
 model User {
-    id       Int    @id @default(autoincrement())
-    name     String
-    email    String @unique
-    password String
+    id        String   @id @default(uuid())
+    name      String
+    email     String   @unique
+    password  String
+
+    userRole UserRoles @default(USER)
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
 
     orders Order[]
+    cart Cart?
 }
 
 
@@ -40,7 +46,7 @@ model Category {
 }
 
 model Product {
-    id          Int     @id @default(autoincrement())
+    id          String   @id @default(uuid())
     name        String
     description String
     price       Decimal @db.Decimal(10, 2)
@@ -54,11 +60,19 @@ model Product {
     category Category @relation(fields: [categoryId], references: [id])
 
     orderItens OrderItem[]
+    cartItems  CartItem[]
 }
 
 
 model Order {
-    id Int @id @default(autoincrement())
+    id          String      @id @default(uuid())
+    userId      String      @map("user_id")
+    totalAmount Decimal     @map("total_amount") @db.Decimal(10, 2)
+    status      OrderStatus @default(PENDING)
+    createdAt   DateTime    @default(now()) @map("created_at")
+
+    user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    items OrderItem[]
 
     userId Int
 
@@ -88,4 +102,32 @@ model OrderItem {
     product Product @relation(fields: [productId], references: [id])
 
     @@unique([orderId, productId])
+}
+
+model Cart {
+id Int @id @default(autoincrement())
+
+userId Int @unique
+
+createdAt DateTime @default(now()) @map("created_at")
+updatedAt DateTime @updatedAt @map("updated_at")
+
+user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+items CartItem[]
+}
+
+model CartItem {
+id Int @id @default(autoincrement())   
+
+cartId Int
+productId Int
+
+quantity Int
+
+unitPrice Decimal @db.Decimal(10,2)
+
+cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+product Product @relation(fields: [productId], references: [id])
+
+@@unique([cartId, productId])
 }
