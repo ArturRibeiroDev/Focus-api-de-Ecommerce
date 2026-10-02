@@ -21,6 +21,7 @@ const userRepository = {
                 name: data.name,
                 email: data.email,
                 password: data.passwordHash,
+                cart: { create: {} },
             },
         });
     },
