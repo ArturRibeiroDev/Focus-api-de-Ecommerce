@@ -13,3 +13,10 @@ export const registerSchema = z.object({
             .min(8, "A senha tem que ter pelo menos 8 carácteres."),
     }),
 });
+
+export const loginSchema = z.object({
+    body: z.object({
+        email: z.string().email(),
+        password: z.string().min(1),
+    }),
+});

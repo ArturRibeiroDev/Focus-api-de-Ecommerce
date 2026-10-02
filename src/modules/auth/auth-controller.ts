@@ -12,17 +12,20 @@ const authController = {
         });
 
         return res.status(201).json({
-            user
-        })
+            user,
+        });
     },
 
-    async find(req: Request, res: Response) {
-        const users = await authService.findALl()
+    async login(req: Request, res: Response) {
+        const { email, password } = req.body;
 
-        return res.status(200).json({
-            users
-        })
-    }
+        const result = await authService.login({
+            email,
+            password,
+        });
+
+        return res.status(200).json(result);
+    },
 };
 
-export { authController}
+export { authController };
