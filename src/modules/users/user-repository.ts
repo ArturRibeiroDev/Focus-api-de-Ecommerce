@@ -6,6 +6,11 @@ interface CreateUserData {
     passwordHash: string;
 }
 
+interface LoginUserData {
+    email: string;
+    password: string;
+}
+
 const userRepository = {
     async findbyEmail(email: string) {
         return prisma.user.findUnique({
@@ -24,9 +29,13 @@ const userRepository = {
             },
         });
     },
-
-    async find() {
-        return prisma.user.findMany()
+    
+    async findbyId(id: string) {
+        return prisma.user.findUnique({
+            where: {
+                id,
+            }
+        })
     }
 };
 

@@ -1,9 +1,15 @@
 import { userRepository } from "../users/user-repository.js";
 import { AppError } from "../../errors/AppError.js";
 import bcrypt from "bcrypt";
+import { generateToken } from "../../utils/jwt.js";
 
 interface RegisterRequest {
     name: string;
+    email: string;
+    password: string;
+}
+
+interface LoginRequest {
     email: string;
     password: string;
 }
@@ -28,15 +34,35 @@ const authService = {
             id: user.id,
             name: user.name,
             email: user.email,
-            createdAt: user.createdAt
-        }
+            createdAt: user.createdAt,
+        };
     },
 
-    async findALl(){
-        const users = await userRepository.find()
+    async login({ email, password }: LoginRequest) {
+        const user = await userRepository.findbyEmail(email);
 
-        return { users }
-    }
+        if (!user) {
+            throw new AppError("E-mail ou senha inválidos!", 401);
+        }
+
+        const passwordMatches = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatches) {
+            throw new AppError("E-mail ou senha inválidos", 401);
+        }
+
+        const token = generateToken(user.id, user.userRole);
+
+        return {
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.userRole,
+            },
+            token,
+        };
+    },
 };
 
-export { authService }
+export { authService };
