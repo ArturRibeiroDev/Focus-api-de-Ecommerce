@@ -15,7 +15,6 @@ const userService = {
 
         return {
             user,
-            id,
         };
     },
 };
