@@ -26,9 +26,13 @@ const userRepository = {
         });
     },
 
-    async find() {
-        return prisma.user.findMany()
-    }
+    async findbyId(id: string) {
+        return prisma.user.findUnique({
+            where: {
+                id,
+            },
+        });
+    },
 };
 
 export { userRepository };

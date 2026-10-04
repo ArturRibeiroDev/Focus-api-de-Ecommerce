@@ -7,7 +7,7 @@ import {
 import { verifyToken } from "../utils/jwt.js";
 import { AppError } from "../errors/AppError.js";
 
-export function authMiddleware(
+export function jwtMiddleware(
   req: Request,
   res: Response,
   next: NextFunction
