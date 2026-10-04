@@ -48,26 +48,24 @@ model Category {
 }
 
 model Product {
-    id          Int   @id @default(autoincrement())
+    id          String  @id @default(uuid())
     name        String
     description String
     price       Decimal @db.Decimal(10, 2)
-    stock Int @default(0)
+    stock       Int     @default(0)
 
     categoryId Int
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
 
-    category Category @relation(fields: [categoryId], references: [id])
-
-    orderItens OrderItem[]
+    category   Category    @relation(fields: [categoryId], references: [id])
+    orderItems OrderItem[]
     cartItems  CartItem[]
 }
 
-
 model Order {
-    id          Int     @id @default(autoincrement())
+    id          String    @id @default(uuid())
     userId      String      @map("user_id")
 
     totalAmount Decimal     @map("total_amount") @db.Decimal(10, 2)
@@ -78,50 +76,46 @@ model Order {
     items OrderItem[]
 
     createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
 
 }
 
 model OrderItem {
-    id Int @id @default(autoincrement()) 
+    id String @id @default(uuid())
 
-    orderId Int
-    productId Int
+    orderId   String
+    productId String
+    quantity  Int
+    price     Decimal @db.Decimal(10, 2)
 
-    quantity Int
-
-    price Decimal @db.Decimal(10, 2)
-
-    order Order @relation(fields: [orderId], references: [id])
+    order   Order   @relation(fields: [orderId], references: [id])
     product Product @relation(fields: [productId], references: [id])
 
     @@unique([orderId, productId])
 }
 
 model Cart {
-id Int @id @default(autoincrement())
+    id Int @id @default(autoincrement())
 
-userId String @unique
+    userId String @unique
 
-createdAt DateTime @default(now()) @map("created_at")
-updatedAt DateTime @updatedAt @map("updated_at")
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
 
-user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-items CartItem[]
+    user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    items CartItem[]
 }
 
 model CartItem {
-id Int @id @default(autoincrement())   
+    id Int @id @default(autoincrement())
 
-cartId Int
-productId Int
+    cartId    Int
+    productId String
+    quantity  Int
 
-quantity Int
+    unitPrice Decimal @db.Decimal(10, 2)
 
-unitPrice Decimal @db.Decimal(10,2)
+    cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+    product Product @relation(fields: [productId], references: [id])
 
-cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
-product Product @relation(fields: [productId], references: [id])
-
-@@unique([cartId, productId])
+    @@unique([cartId, productId])
 }
