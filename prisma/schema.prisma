@@ -40,21 +40,21 @@ model Product {
     description String
     price       Decimal  @db.Decimal(10, 2)
     stock       Int      @default(0)
-    categoryId  String   @map("category_id")
+    categoryId  Int  @map("category_id")
     createdAt   DateTime @default(now()) @map("created_at")
     updatedAt   DateTime @updatedAt @map("updated_at")
 
     category   Category   @relation(fields: [categoryId], references: [id], onDelete: Restrict)
     cartItems  CartItem[]
     orderItems OrderItem[]
-    isActive   Boolean   @default(true)
+    isActive   Boolean   @default(true) @map("is_active")
 
     @@index([categoryId])
     @@map("products")
 }
 
 model Category {
-    id        String   @id @default(uuid())
+    id        Int   @id @default(autoincrement())
     name      String   @unique
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
@@ -99,6 +99,8 @@ model Order {
 
     user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
     items OrderItem[]
+
+    updatedAt DateTime @updatedAt @map("updated_at")
 
     @@map("orders")
 }

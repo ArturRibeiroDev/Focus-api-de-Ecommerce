@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { authService } from "./auth-service.js";
 
-const authController = {
+export const authController = {
     async register(req: Request, res: Response) {
         const { name, email, password } = req.body;
 
@@ -28,4 +28,4 @@ const authController = {
     },
 };
 
-export { authController };
+

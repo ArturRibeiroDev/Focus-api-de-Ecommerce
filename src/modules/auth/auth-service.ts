@@ -14,7 +14,7 @@ interface LoginRequest {
     password: string;
 }
 
-const authService = {
+export const authService = {
     async register({ name, email, password }: RegisterRequest) {
         const existingUser = await userRepository.findbyEmail(email);
 
@@ -65,4 +65,4 @@ const authService = {
     },
 };
 
-export { authService };
+
