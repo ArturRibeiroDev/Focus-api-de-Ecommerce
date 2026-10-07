@@ -8,6 +8,8 @@ interface CreateProductData {
   categoryId: number;
 }
 
+type UpdateProductData = Partial<CreateProductData>;
+
 export const productRepository = {
   async create(data: CreateProductData) {
     return prisma.product.create({
@@ -49,6 +51,56 @@ export const productRepository = {
         orderBy: {
             createdAt: "desc",
         },
+    })
+  },
+
+  async update(data: UpdateProductData, id: string) {
+    const updateData: {
+      name?: string;
+      description?: string;
+      price?: number;
+      stock?: number;
+      category?: { connect: { id: number } };
+    } = {};
+
+    if (data.name !== undefined) {
+      updateData.name = data.name;
+    }
+
+    if (data.description !== undefined) {
+      updateData.description = data.description;
+    }
+
+    if (data.price !== undefined) {
+      updateData.price = data.price;
+    }
+
+    if (data.stock !== undefined) {
+      updateData.stock = data.stock;
+    }
+
+    if (data.categoryId !== undefined) {
+      updateData.category = {
+        connect: {
+          id: data.categoryId,
+        },
+      };
+    }
+
+    return prisma.product.update({
+      where: { id },
+      data: updateData,
+    });
+  },
+
+  async delete(id: string) {
+    return prisma.product.update({
+        where: {
+            id
+        },
+        data: {
+            isActive: false
+        }
     })
   }
 };

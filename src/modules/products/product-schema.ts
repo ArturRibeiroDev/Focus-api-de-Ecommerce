@@ -6,6 +6,11 @@ export const productSchema = z.object({
         description: z.string().min(1).optional(),
         price: z.number().positive(),
         stock: z.number().int().nonnegative().optional(),
-        categoryId: z.number().int().positive().optional(),
+        categoryId: z.number().int().positive(),
     })
+})
+
+export const productUpdateSchema = z.object({
+    body: productSchema.shape.body
+        .partial()
 })

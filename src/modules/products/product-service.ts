@@ -10,6 +10,8 @@ interface CreateProductData {
   categoryId: number;
 }
 
+type UpdateProductData = Partial<CreateProductData>;
+
 export const productService = {
     async create(data: CreateProductData) {
 
@@ -25,4 +27,43 @@ export const productService = {
     async findAll() {
         return productRepository.findAll();
     },
+
+    async findById(id: string) {
+
+        const product = await productRepository.findById(id)
+
+        if (!product) {
+            throw new AppError("Produto não existe!", 400)
+        }
+
+        return productRepository.findById(id)
+    },
+
+    async update(data: UpdateProductData, id: string) {
+        const product = await productRepository.findById(id)
+
+        if (!product) {
+            throw new AppError("Produto não encontrado!", 400)
+        }
+
+        if (data.categoryId !== undefined) {
+            const category = await categoryRepository.findById(data.categoryId);
+
+            if (!category) {
+                throw new AppError("Categoria não existe!", 400);
+            }
+        }
+
+        return productRepository.update(data, id)
+    },
+
+    async delete(id: string) {
+        const product = await productRepository.findById(id)
+
+        if(!product) {
+            throw new AppError("Produto não encontrado!", 400)
+        }
+
+        return productRepository.delete(id)
+    }
 };
