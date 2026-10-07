@@ -5,7 +5,7 @@ interface UserRequest {
     id: string;
 }
 
-const userService = {
+export const userService = {
     async getUser({ id }: UserRequest) {
         const user = await userRepository.findbyId(id);
 
@@ -23,4 +23,3 @@ const userService = {
     },
 };
 
-export { userService };

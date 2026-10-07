@@ -6,7 +6,7 @@ interface CreateUserData {
     passwordHash: string;
 }
 
-const userRepository = {
+export const userRepository = {
     async findbyEmail(email: string) {
         return prisma.user.findUnique({
             where: {
@@ -35,4 +35,4 @@ const userRepository = {
     },
 };
 
-export { userRepository };
+
