@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const getUserSchema = z.object({
   params: z.object({
-    id: z.int().positive(),
+    id: z.coerce.number().int().positive(),
   }),
 });
-
