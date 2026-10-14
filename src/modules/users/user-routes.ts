@@ -14,7 +14,7 @@ userRoutes.get("/me", jwtMiddleware, userController.me);
 userRoutes.get(
     "/:id",
     jwtMiddleware,
-    roleMiddleware("USER"),
+    roleMiddleware("ADMIN"),
     validate(getUserSchema),
     userController.him,
 );

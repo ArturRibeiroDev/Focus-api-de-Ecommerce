@@ -15,11 +15,7 @@ export const userController = {
     },
 
     async him(req: Request, res: Response) {
-        const id = req.params.id;
-
-        if (typeof id !== "string") {
-            throw new AppError("ID inválido", 400);
-        }
+        const id = Number(req.params.id)
 
         const user = await userService.getUser({
             id,

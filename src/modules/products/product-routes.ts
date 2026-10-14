@@ -11,9 +11,9 @@ export const productsRoutes = Router()
 
 productsRoutes.get("/", productController.get)
 productsRoutes.get("/:id", productController.find)
-productsRoutes.post("/", jwtMiddleware, validate(productSchema), roleMiddleware("USER"), productController.create)
-productsRoutes.put("/:id", jwtMiddleware, validate(productSchema), roleMiddleware("USER"), productController.update)
-productsRoutes.patch("/:id", jwtMiddleware, validate(productUpdateSchema), roleMiddleware("USER"), productController.update)
-productsRoutes.delete("/:id", jwtMiddleware, roleMiddleware("USER"), productController.delete)
+productsRoutes.post("/", jwtMiddleware, validate(productSchema), productController.create)
+productsRoutes.put("/:id", jwtMiddleware, validate(productSchema), productController.update)
+productsRoutes.patch("/:id", jwtMiddleware, validate(productUpdateSchema), productController.update)
+productsRoutes.delete("/:id", jwtMiddleware, productController.delete)
 
 

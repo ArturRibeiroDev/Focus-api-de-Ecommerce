@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { productService } from "./product-service.js";
 import { AppError } from "../../errors/AppError.js";
+import { productQuerySchema } from "./product-schema.js";
 
 export const productController = {
     async create(req: Request, res: Response) {
@@ -10,45 +11,34 @@ export const productController = {
     },
 
     async get(req: Request, res: Response) {
-        const products = await productService.findAll();
+        const query = productQuerySchema.parse(req.query);
 
-        return res.json(products);
+        const result = await productService.findAll(query);
+
+        return res.status(200).json(result);
     },
 
     async find(req: Request, res: Response) {
-        const id = req.params.id;
-
-        if (typeof id !== "string") {
-            throw new AppError("ID inválido", 400);
-        }
+        const id = Number(req.params.id)
 
         const product = await productService.findById(id);
 
         return res.json(product);
     },
 
-    async update( req: Request, res: Response) {
-        const id = req.params.id
+    async update(req: Request, res: Response) {
+        const id = Number(req.params.id)
 
-        if (typeof id !== "string") {
-            throw new AppError("ID inválido", 400);
-        }
+        const product = await productService.update(req.body, id);
 
-        const product = await productService.update(req.body, id)
-
-        return res.json(product)
-        
+        return res.json(product);
     },
 
     async delete(req: Request, res: Response) {
-        const id = req.params.id
+        const id = Number(req.params.id)
 
-        if (typeof id !== "string") {
-            throw new AppError("ID inválido", 400);
-        }
+        const product = await productService.delete(id);
 
-        const product = await productService.delete(id)
-
-        return res.json(product)
-    }
+        return res.json(product);
+    },
 };

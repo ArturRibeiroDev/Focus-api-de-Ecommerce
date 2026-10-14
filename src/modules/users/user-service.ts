@@ -2,7 +2,7 @@ import { userRepository } from "./user-repository.js";
 import { AppError } from "../../errors/AppError.js";
 
 interface UserRequest {
-    id: string;
+    id: number;
 }
 
 export const userService = {

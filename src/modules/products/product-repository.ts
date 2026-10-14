@@ -1,4 +1,6 @@
 import { prisma } from "../../config/prisma.js"
+import { Prisma } from "../../generated/prisma/index.js";
+import type { ProductQuery } from "./product-schema.js";
 
 interface CreateProductData {
   name: string;
@@ -38,21 +40,50 @@ export const productRepository = {
     })
   },
 
-  async findAll() {
-    return prisma.product.findMany({
-        where: {
-            isActive: true
-        },
+  
+async findAll({ page, limit, search }: ProductQuery) {
+  const where: Prisma.ProductWhereInput = {
+    isActive: true,
+    ...(search
+      ? {
+          name: {
+            contains: search,
+            mode: "insensitive",
+          },
+        }
+      : {}),
+  };
 
-        include: {
-            category: true
-        },
+  const skip = (page - 1) * limit;
 
-        orderBy: {
-            createdAt: "desc",
-        },
-    })
-  },
+  const [products, total] = await prisma.$transaction([
+    prisma.product.findMany({
+      where,
+
+      skip,
+      take: limit,
+
+      include: {
+        category: true,
+      },
+
+      orderBy: [
+        { createdAt: "desc" },
+        { id: "desc" },
+      ],
+    }),
+
+    prisma.product.count({
+      where,
+    }),
+  ]);
+
+  return {
+    products,
+    total,
+  };
+},
+
 
   async update(data: UpdateProductData, id: number) {
     const updateData: {

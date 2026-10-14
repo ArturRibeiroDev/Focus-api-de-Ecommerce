@@ -7,14 +7,14 @@ interface TokenPayload {
     role: string;
 }
 
-export function generateToken(userId: string, role: string) {
+export function generateToken(userId: number, role: string) {
     return jwt.sign(
         {
             role,
         },
         secret,
         {
-            subject: userId,
+            subject: String(userId),
             expiresIn: expiresIn,
         },
     );
