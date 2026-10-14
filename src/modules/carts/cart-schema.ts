@@ -12,3 +12,11 @@ export const updateCartItemSchema = z.object({
         quantity: z.number().int().positive()
     })
 })
+
+const productIdParams = z.object({
+  productId: z.number().int().positive(),
+});
+
+export const removeCartItemSchema = z.object({
+  params: productIdParams,
+});

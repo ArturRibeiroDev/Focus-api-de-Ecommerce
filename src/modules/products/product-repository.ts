@@ -30,7 +30,7 @@ export const productRepository = {
     });
   },
 
-  async findById(id: string) {
+  async findById(id: number) {
     return prisma.product.findUnique({
         where: {
             id
@@ -54,7 +54,7 @@ export const productRepository = {
     })
   },
 
-  async update(data: UpdateProductData, id: string) {
+  async update(data: UpdateProductData, id: number) {
     const updateData: {
       name?: string;
       description?: string;
@@ -93,7 +93,7 @@ export const productRepository = {
     });
   },
 
-  async delete(id: string) {
+  async delete(id: number) {
     return prisma.product.update({
         where: {
             id
