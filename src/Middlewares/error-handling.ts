@@ -22,7 +22,6 @@ function errorHandling(
             error: {
                 code: "VALIDATION_ERROR",
                 message: "Dados inválidos.",
-                details: error.flatten(),
             },
         });
     }

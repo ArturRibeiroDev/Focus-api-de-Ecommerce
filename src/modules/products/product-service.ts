@@ -18,7 +18,7 @@ export const productService = {
         const category = await categoryRepository.findById(data.categoryId);
 
         if (!category) {
-            throw new AppError("Categoria não existe!", 400);
+            throw new AppError("Categoria não existe!", 404);
         }
 
         return productRepository.create(data);
@@ -49,24 +49,24 @@ export const productService = {
         const product = await productRepository.findById(id);
 
         if (!product) {
-            throw new AppError("Produto não existe!", 400);
+            throw new AppError("Produto não encontrado!", 404);
         }
 
-        return productRepository.findById(id);
+        return product;
     },
 
     async update(data: UpdateProductData, id: number) {
         const product = await productRepository.findById(id);
 
         if (!product) {
-            throw new AppError("Produto não encontrado!", 400);
+            throw new AppError("Produto não encontrado!", 404);
         }
 
         if (data.categoryId !== undefined) {
             const category = await categoryRepository.findById(data.categoryId);
 
             if (!category) {
-                throw new AppError("Categoria não existe!", 400);
+                throw new AppError("Categoria não existe!", 404);
             }
         }
 
@@ -77,7 +77,7 @@ export const productService = {
         const product = await productRepository.findById(id);
 
         if (!product) {
-            throw new AppError("Produto não encontrado!", 400);
+            throw new AppError("Produto não encontrado!", 404);
         }
 
         return productRepository.delete(id);

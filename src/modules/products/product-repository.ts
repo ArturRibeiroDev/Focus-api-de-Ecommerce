@@ -33,13 +33,16 @@ export const productRepository = {
   },
 
   async findById(id: number) {
-    return prisma.product.findUnique({
+    return prisma.product.findFirst({
         where: {
-            id
+        id,
+        isActive: true,
         },
-    })
+        include: {
+        category: true,
+        },
+    });
   },
-
   
 async findAll({ page, limit, search }: ProductQuery) {
   const where: Prisma.ProductWhereInput = {

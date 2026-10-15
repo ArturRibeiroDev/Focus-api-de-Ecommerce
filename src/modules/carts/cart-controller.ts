@@ -15,7 +15,7 @@ export const cartController = {
             req.body
         )
 
-        return res.json(item)
+        return res.status(201).json(item)
     },
 
     async updateItem(req: Request, res: Response) {

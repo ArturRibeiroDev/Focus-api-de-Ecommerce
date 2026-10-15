@@ -6,7 +6,7 @@ export const registerSchema = z.object({
             .string()
             .trim()
             .min(3, "O nome precisa ter pelo menos 3 carácteres."),
-        email: z.string().email("E-mail inválido."),
+        email: z.string().trim().toLowerCase().email("E-mail inválido."),
         password: z
             .string()
             .trim()
@@ -16,7 +16,7 @@ export const registerSchema = z.object({
 
 export const loginSchema = z.object({
     body: z.object({
-        email: z.string().email(),
+        email: z.string().trim().toLowerCase().email(),
         password: z.string().min(1),
     }),
 });

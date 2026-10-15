@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { productService } from "./product-service.js";
-import { AppError } from "../../errors/AppError.js";
 import { productQuerySchema } from "./product-schema.js";
 
 export const productController = {
@@ -39,6 +38,6 @@ export const productController = {
 
         const product = await productService.delete(id);
 
-        return res.json(product);
+        return res.status(204).send();
     },
 };

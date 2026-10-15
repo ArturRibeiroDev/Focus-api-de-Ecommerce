@@ -44,7 +44,7 @@ export function jwtMiddleware(
 
     const id = Number(payload.sub);
 
-    if (!Number.isSafeInteger(id) || id <= 0) {
+    if (!Number.isSafeInteger(id) || id <= 0 || id > 2_147_483_647) {
         throw new AppError("Token inválido", 401);
     }
 

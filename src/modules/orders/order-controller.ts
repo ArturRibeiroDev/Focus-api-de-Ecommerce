@@ -7,6 +7,6 @@ export const orderController = {
       req.user.id
     );
 
-    return res.status(200).json(orders);
+    return res.json(orders);
   },
 };

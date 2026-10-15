@@ -17,6 +17,10 @@ export const userController = {
     async him(req: Request, res: Response) {
         const id = Number(req.params.id)
 
+        if (id !== req.user.id) {
+            throw new AppError("Usuário não encontrado", 404, "USER_NOT_FOUND");
+        }
+
         const user = await userService.getUser({
             id,
         });
